@@ -16,13 +16,13 @@
     </div>
 
     <div>
-      <picker mode="date" value=begindate :start="currdate" end="" @change="bindBeginDateChange">
+      <picker mode="date" value=begindate :start="currdate" end="" @change="bindBeginDateChange" @click="setbegindate">
         开始日期:{{begindate}}
       </picker>
     </div>
 
     <div>
-      <picker mode="time" value=begintime :start="currtime" end="23:59" @change="bindBeginTimeChange">
+      <picker mode="time" value=begintime :start="currtime" end="23:59" @change="bindBeginTimeChange" @click="setbegintime">
         开始时间:{{begintime}}
       </picker>
     </div>
@@ -75,7 +75,6 @@
       async onShow(){
         //当页面加载时，请求任务类型，后期做缓存优化
          this.gettype();
-         this.currdate=utils.getCurrentDate();
       },
 
       methods:{
@@ -90,15 +89,6 @@
           this.endtime=e.target.value;
         },
         bindBeginDateChange(e) {
-          //当开始日期，大于当天（只有大于和等于俩个选项）时，开始日期不再受限
-          if(new Date(Date.parse(e.target.value))>new Date(Date.parse(utils.getCurrentDate())))
-          {
-            this.currtime="00:00";
-          }
-          else
-          {
-            this.currtime=utils.getCurrentTime();
-          }
           this.begindate=e.target.value;
         },
         bindEndDateChange(e) {
@@ -160,6 +150,23 @@
         }).catch(err=>{
           console.log(err.status,err.message)
         })
+        },
+        setbegindate()
+        {
+          this.currdate=utils.getCurrentDate();
+          console.log("lll")
+        },
+        setbegintime()
+        {
+          //当开始日期，大于当天（只有大于和等于俩个选项）时，开始日期不再受限
+          if(new Date(Date.parse(this.begindate))>new Date(Date.parse(utils.getCurrentDate())))
+          {
+            this.currtime="00:00";
+          }
+          else
+          {
+            this.currtime=utils.getCurrentTime();
+          }
         }
       }
     }
