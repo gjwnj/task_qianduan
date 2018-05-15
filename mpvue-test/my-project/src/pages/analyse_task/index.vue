@@ -4,10 +4,24 @@
     <div>
       <div class="weui-flex">
         <div class="weui-flex__item">
-          <input v-model="taskname_select" placeholder="任务名称"/>
+          <span class="weui-flex__item">名称</span>
         </div>
         <div class="weui-flex__item">
-          <button class="weui-btn" @click="getdatabyNameOrType">更改</button>
+          <input v-model="taskname_select" placeholder="任务名称"/>
+        </div>
+      </div>
+      <div class="weui-flex">
+        <div class="weui-flex__item">
+          <span class="weui-flex__item">类别</span>
+        </div>
+        <div class="weui-flex__item">
+          <input v-model="tasktype_select" placeholder="任务类别"/>
+        </div>
+      </div>
+
+      <div class="weui-flex">
+        <div class="weui-flex__item">
+          <button class="weui-btn" @click="getdatabyNameOrType">查询</button>
         </div>
       </div>
 
