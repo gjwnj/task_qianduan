@@ -40,7 +40,7 @@
     </div>
 
     <div>
-      <button @click="addtask">提交</button>
+      <button class="weui-btn" type="primary" @click="addtask">提交</button>
     </div>
 
   </div>
