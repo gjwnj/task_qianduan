@@ -66,7 +66,7 @@
     methods:{
         getoneTask() {
           //默认请求最早的未完成任务
-            this.$http.get("/task/"+store.state.openid+"/"+this.pageNo+"/"+this.pageSize+"/"+1,{})
+            this.$http.get("/task/"+store.state.openid+"/"+this.pageNo+"/"+this.pageSize+"/"+1)
               .then((d)=>{
               //判断是否有未完任务
               if(d.data["obj"]!==null&&d.data["obj"]!==""&&d.data["obj"]!==undefined)
@@ -89,6 +89,7 @@
 
           })
           .catch((err)=>{
+            this.pageSum="网络异常，请求数据失败";
             console.log(err.status,err.message);
           })
         },
