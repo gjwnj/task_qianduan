@@ -10,9 +10,9 @@
       </div>
 
       <div class="weui-cell">
-      <div class="weui-cell__bd">{{taskname}}</div>
-      <div class="weui-cell__ft">当前任务名称</div>
-     </div>
+          <div class="weui-cell__bd">{{taskname}}</div>
+          <div class="weui-cell__ft">当前任务名称</div>
+      </div>
 
       <div class="weui-cell">
         <div class="weui-cell__bd">{{taskdesc}}</div>
@@ -66,7 +66,7 @@
     methods:{
         getoneTask() {
           //默认请求最早的未完成任务
-            this.$http.get("/task/"+store.state.openid+"/"+this.pageNo+"/"+this.pageSize,{})
+            this.$http.get("/task/"+store.state.openid+"/"+this.pageNo+"/"+this.pageSize+"/"+1,{})
               .then((d)=>{
               //判断是否有未完任务
               if(d.data["obj"]!==null&&d.data["obj"]!==""&&d.data["obj"]!==undefined)
@@ -94,7 +94,7 @@
         },
 
         NextPage() {
-          //当为最后一个任务时，不再请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
+          //当为最后一个任务时，不再请求，避免无效请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
           if(this.pageNo<this.pageSum)
           {
             this.pageNo++;
@@ -104,7 +104,7 @@
         },
 
         PrePage() {
-          //当为第一个任务时，不再请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
+          //当为第一个任务时，不再请求，避免无效请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
           if(this.pageNo>1)
           {
             this.pageNo--;

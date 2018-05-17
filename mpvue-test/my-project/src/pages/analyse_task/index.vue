@@ -7,7 +7,7 @@
           <span class="weui-flex__item">名称</span>
         </div>
         <div class="weui-flex__item">
-          <input v-model="taskname_select" placeholder="任务名称"/>
+          <input v-model="taskname_select" v-bind:placeholder="taskname_place"/>
         </div>
       </div>
       <div class="weui-flex">
@@ -15,7 +15,7 @@
           <span class="weui-flex__item">类别</span>
         </div>
         <div class="weui-flex__item">
-          <input v-model="tasktype_select" placeholder="任务类别"/>
+          <input v-model="tasktype_select" v-bind:placeholder="tasktype_place"/>
         </div>
       </div>
 
@@ -62,13 +62,35 @@
             echarts,
             onInit: initChart,
             taskname_select:"",
-            tasktype_select:""
+            tasktype_select:"",
+            taskname_place:"任务名称",
+            tasktype_place:"任务类别"
           }
         },
        methods:{
           getdatabyNameOrType(dateinterval) {
             dateinterval=7;
-            this.$http.get("/task/time/"+dateinterval+"/"+this.taskname_select+"/"+store.state.openid,{})
+            let partpath="";
+            if(this.taskname_select!=""&&this.tasktype_select!="")
+            {
+              partpath="taskname/"+this.taskname_select+"/"+"tasktype/"+this.tasktype_select+"/";
+            }
+            else if(this.taskname_select!="")
+            {
+                partpath="taskname/"+this.taskname_select+"/";
+            }
+            else if(this.tasktype_select!="")
+            {
+                partpath="tasktype/"+this.tasktype_select+"/";
+            }
+            else
+            {
+              //请求参数异常，不予处理
+              this.taskname_place="名称或者类别不得为空";
+              this.tasktype_place="名称或者类别不得为空";
+              return;
+            }
+            this.$http.get("/task/time/"+dateinterval+"/"+partpath+"uid/"+store.state.openid,{})
               .then((d)=>{
               console.log(d.data);
               //图表数据初始化
