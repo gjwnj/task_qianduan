@@ -74,7 +74,7 @@
 
       async onShow(){
         //当页面加载时，请求任务类型，后期做缓存优化
-         this.gettype();
+       utils.getType(this.typelist,store.state.openid);
       },
 
       methods:{
@@ -103,18 +103,12 @@
               this.end_start="00:00";
             }
         },
-        //获得所有的system和用户自定义的任务类型
-        gettype()
-        {
-          this.$http.get("/taskmenu/"+store.state.openid,{}).then((d)=>{
-            for(let val in d.data["obj"])
-            {
-              this.typelist[val]=d.data["obj"][val]["name"];
-              console.log(this.typelist[val]);
-            };
-          }).catch(err=>{
-          console.log(err.status,err.message)
-        })
+        //配合异步回调，未完的想法
+        inittype(data) {
+          for(let val in data)
+          {
+            this.typelist[val]=data[val];
+          };
         },
         addtask()
         {

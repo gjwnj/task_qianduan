@@ -1,5 +1,5 @@
 <template>
-<div>
+<!--div>
 
   <div class="weui-cells__title">只能修改开始时间距离当前超过30分钟的任务</div>
 
@@ -32,11 +32,33 @@
     <button @click="revise_task">{{buttonvalue}}</button>
 
   </div>
-</div>
+
+</div-->
+  <div>
+    <taskpage :typelist="typelist" :typevalue="typevalue" :taskname="taskname" :taskdesc="taskdesc" :begintime="starttime"
+              :endtime="endtime" :begindate="begindate" :enddate="enddate" :disabled="disabled" @childEvent="parentMethod"></taskpage>
+
+    <button v-if="disabled" @click="revise_task" class="weui-btn" type="warn">修改</button>
+    <button v-else class="weui-btn" type="primary" @click="update_task">提交</button>
+
+    <!-- 对上下按钮采用flex布局-->
+    <div class="weui-flex">
+      <div class="weui-flex__item">
+        <button class="weui-btn" type="mini" @click="PrePage">上一个</button>
+      </div>
+      <div class="weui-flex__item">
+        <button class="weui-btn" type="mini" @click="NextPage">下一个</button>
+      </div>
+    </div>
+
+  </div>
+
 </template>
 
 <script>
   import store from "../task/store"
+  import * as utils from "../../utils/index"
+  import taskpage from "@/components/taskpage"
     export default {
         //name: "index"
       data() {
@@ -44,14 +66,20 @@
           pageNo:1,
           pageSize:1,
           pageSum:"",
+          typelist:new Array(),
+          typevalue:"",
           taskid:"",
           taskname: "",
           taskdesc:"",
           starttime:"",
           endtime:"",
-          disabled:true,
-          buttonvalue:"修改"
+          begindate:"",
+          enddate:"",
+          disabled:true
         }
+      },
+      components:{
+        taskpage
       },
       methods:{
         getoneunstarttask() {
@@ -59,11 +87,17 @@
             console.log(d.data);
             if(d.data["obj"]!==null&&d.data["obj"]!==""&&d.data["obj"]!==undefined)
             {
+              let stdatetime=d.data["obj"]["starttime"];
+              let enddatetime=d.data["obj"]["endtime"];
+
               this.taskname=d.data["obj"]["taskname"];
               this.taskdesc=d.data["obj"]["taskdesc"];
               this.taskid=d.data["obj"]["id"];
-              this.starttime=d.data["obj"]["starttime"];
-              this.endtime=d.data["obj"]["endtime"];
+              this.typevalue=d.data["obj"]["tasktype"];
+              this.starttime=utils.getCurrentTime(stdatetime);
+              this.endtime=utils.getCurrentTime(enddatetime);
+              this.begindate=utils.getCurrentDate(stdatetime);
+              this.enddate=utils.getCurrentDate(enddatetime);
               this.pageSum=d.data["obj"]["pageSum"];
             }
             else
@@ -73,7 +107,6 @@
 
           }).catch((err)=>{
             this.pageSum="网络异常，请求数据失败";
-            console.log(err.status,err.message)
           })
         },
         revise_task() {
@@ -81,11 +114,48 @@
           {
             this.disabled=false;
           }
+        },
+        NextPage() {
+          //当为最后一个任务时，不再请求，避免无效请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
+          if(this.pageNo<this.pageSum)
+          {
+            this.pageNo++;
+            this.getoneunstarttask()
+          }
+        },
+
+        PrePage() {
+          //当为第一个任务时，不再请求，避免无效请求，减轻后端压力，但在同一账号多个客户端的情况下，可能会出现问题
+          if(this.pageNo>1)
+          {
+            this.pageNo--;
+            this.getoneunstarttask();
+          }
+        },
+        update_task() {
+          this.$http.put("/task/",{"taskname":this.taskname,"taskdesc":this.taskdesc,"starttime":this.begindate+" "+this.starttime+":00",
+          "endtime":this.enddate+" "+this.endtime+":00","id":this.taskid}).then((d)=>{
+            wx.navigateTo({url:'/pages/Success/Success'});
+          }).catch((err)=>{
+            console.log(err.status,err.message)
+          })
+        },
+        parentMethod({typevalue,taskname,taskdesc,begintime,endtime,begindate,enddate}) {
+          this.taskname=taskname;
+          this.taskdesc=taskdesc;
+          this.typevalue=typevalue;
+          this.starttime=begintime;
+          this.endtime=endtime;
+          this.begindate=begindate;
+          this.enddate=enddate;
         }
       },
       async onShow() {
         //确保每次加载页面，处于不可修改状态
         this.disabled=true;
+        //当页面加载时，请求任务类型，后期做缓存优化
+        utils.getType(this.typelist,store.state.openid);
+        //请求第一个未开始任务
         this.getoneunstarttask();
       }
     }

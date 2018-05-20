@@ -21,7 +21,7 @@
 
       <div class="weui-flex">
         <div class="weui-flex__item">
-          <button class="weui-btn" @click="getdatabyNameOrType">查询</button>
+          <button class="weui-btn" type="primary" @click="getdatabyNameOrType">查询</button>
         </div>
       </div>
 

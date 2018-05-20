@@ -4,6 +4,7 @@
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/undone_task/undone_task'">待做任务</navigator>
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/unstart_task/unstart_task'">修改任务</navigator>
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/analyse_task/analyse_task'">近七天效率</navigator>
+      <navigator class="weui-cell weui-cell_access" :url=" '/pages/add_taskmenu/add_taskmenu'">自定义类别</navigator>
       <div class="weui-flex">
         <div class="weui-flex__item">
           <span>积分:{{credits}}</span>

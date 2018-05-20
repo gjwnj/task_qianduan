@@ -60,7 +60,6 @@
         taskname: "",
         taskdesc:"",
         resttime:""
-
       }
     },
     methods:{
@@ -101,7 +100,6 @@
             this.pageNo++;
             this.getoneTask();
           }
-
         },
 
         PrePage() {
@@ -111,7 +109,6 @@
             this.pageNo--;
             this.getoneTask();
           }
-
         },
        FinishTask() {
           let currdatetime=utils.getCurrentDate()+" "+utils.getCurrentTime()+":00";
