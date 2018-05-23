@@ -22,8 +22,7 @@ export default {
   // 这个字段走 app.json
   config: {
     pages: [
-      '^pages/index/index',
-      'pages/task/task',
+      '^pages/task/task',
       'pages/create_task/create_task',
       'pages/undone_task/undone_task',
       'pages/unstart_task/unstart_task',

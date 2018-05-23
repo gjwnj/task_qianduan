@@ -12,10 +12,8 @@
   "dependencies": {
     "dgram": "^1.0.1",
     "dns": "^0.2.2",
-    "echarts": "^4.1.0",
     "flyio": "^0.5.2",
     "fs": "^0.0.1-security",
-    "mp-weui": "^1.0.0",
     "mpvue": "^1.0.1",
     "net": "^1.0.2",
     "tls": "^0.0.1",
