@@ -5,6 +5,7 @@
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/unstart_task/unstart_task'">修改任务</navigator>
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/analyse_task/analyse_task'">近七天效率</navigator>
       <navigator class="weui-cell weui-cell_access" :url=" '/pages/add_taskmenu/add_taskmenu'">自定义类别</navigator>
+      <navigator class="weui-cell weui-cell_access" :url=" '/pages/done_task/done_task'">已完成任务</navigator>
       <div class="weui-flex">
         <div class="weui-flex__item">
           <span>积分:{{credits}}</span>
@@ -18,6 +19,7 @@
         <button v-if="!isqd" class="weui-btn" type="primary" @click="SignIn(openid)">签到</button>
         <button v-else class="weui-btn">已签到</button>
       </div>
+      <button v-if="!issq" class="weui-btn" type="primary" open-type="getUserInfo" @getuserinfo="agreeGetUser">授权</button>
     </div>
 </template>
 
@@ -29,6 +31,7 @@
           return {
             openid:"",
             isqd:false,
+            issq:false,
             credits:"",
             //连签天数，吐槽一下自己的翻译
             lastday:""
@@ -39,19 +42,20 @@
     {
       //获取用户id
       store.commit('getopenid');
+      //如果用户openid不存在，授权按钮显示
       if(store.state.openid==="")
       {
         console.log("null");
-        this.getUserInfo ();
         this.openid=store.state.openid;
-        this.isSignIn(store.state.openid);
+        this.issq=false;
       }
       else
       {
         console.log("not null");
+        this.issq=true;
         this.openid=store.state.openid;
+        //签到
         this.isSignIn(store.state.openid);
-
       }
 
     },
@@ -126,6 +130,25 @@
             })
             .catch((err)=>{
               console.log(err.status,err.message);
+            })
+          },
+          agreeGetUser(e) {
+            console.log(e)
+            let encryptedData=e.mp.detail.encryptedData;
+            let iv=e.mp.detail.iv;
+            wx.login({
+              success: (res) => {
+                let code=res.code;
+                    this.$http.post("/user/",{"encryptedData":encryptedData,"iv":iv,"code":code}).then((d)=>{
+                      this.openid=d.data["obj"]["openid"];
+                      wx.setStorageSync('openid',this.openid);
+                      store.commit('getopenid')
+                      this.issq=true;
+                      console.log("openid:"+this.openid)
+                    }).catch(err=>{
+                      console.log(err.status,err.message)
+                    })
+              }
             })
           }
         }

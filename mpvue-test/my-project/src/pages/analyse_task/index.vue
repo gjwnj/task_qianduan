@@ -67,6 +67,11 @@
             tasktype_place:"任务类别"
           }
         },
+    async onShow()
+    {
+     this.taskname_select="";
+     this.tasktype_select="";
+    },
        methods:{
           getdatabyNameOrType(dateinterval) {
             dateinterval=7;

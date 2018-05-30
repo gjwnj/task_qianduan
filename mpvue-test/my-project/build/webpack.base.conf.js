@@ -84,6 +84,22 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[ext]')
         }
+      },
+      {
+        test: /\.js$/,
+        include: [
+          resolve('src'),
+          resolve('node_modules/mpvue-echarts')
+        ],
+        use: [
+          'babel-loader',
+          {
+            loader: 'mpvue-loader',
+            options: {
+              checkMPEntry: true
+            }
+          }
+        ]
       }
     ]
   }

@@ -18,6 +18,7 @@
       addtasktype() {
         this.$http.post("/taskmenu/",{"name":this.typevalue,"creater":store.state.openid}).then((d)=>{
           console.log(d.data)
+          this.typevalue="";
           wx.navigateTo({url:'/pages/Success/Success'});
         }).catch((err)=>{
           console.log(err.status,err.message)
